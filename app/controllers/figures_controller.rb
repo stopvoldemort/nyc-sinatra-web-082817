@@ -16,14 +16,31 @@ class FiguresController < ApplicationController
   end
 
   post '/figures' do
-    binding.pry
-    #receives post from /new
+    @figure = Figure.create(params[:figure])
+    if params[:title][:name]
+      @figure.titles << Title.create(params[:title])
+    end
+    if params[:landmark][:name]
+      @figure.landmarks << Landmark.create(params[:landmark])
+    end
     redirect to '/figures'
   end
 
   get '/figures/:id' do
     @figure = Figure.find(params[:id])
     erb :show
+  end
+
+  patch '/figures/:id' do
+    @figure = Figure.find(params[:id])
+    @figure.update(params[:figure])
+    if params[:title][:name]
+      @figure.titles << Title.create(params[:title])
+    end
+    if params[:landmark][:name]
+      @figure.landmarks << Landmark.create(params[:landmark])
+    end
+    redirect to "/figures/#{@figure.id}"
   end
 
 end
